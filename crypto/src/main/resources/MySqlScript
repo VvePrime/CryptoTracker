@@ -1,0 +1,17 @@
+drop database if exists crypto_db;
+create database crypto_db;
+use  crypto_db;
+
+
+create table coin(
+   name varchar(50),
+   symbol varchar(20),
+   quantity double precision,
+   cost_price double precision,
+   value double precision,
+   constraint pk_coin primary key (symbol)
+);
+
+insert into coin values ('Bitcoin','BTC', 1.00, 40000, 40000);
+
+select * from coin;
