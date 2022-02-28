@@ -1,12 +1,12 @@
 package com.crypto.dto;
 
 public class ReturnsDTO {
+	public String coinName;
+	public String symbol;
 	public double costPrice;
 	public double currentPrice;
 	public float returnPercentage;
-	public double returnValue;
-	public String coinName;
-	public String symbol;
+	public double returnValue;	
 	
 	public String getCoinName() {
 		return coinName;

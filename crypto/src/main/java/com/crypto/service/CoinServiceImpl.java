@@ -33,9 +33,20 @@ public class CoinServiceImpl implements CoinService{
 	}
 
 	@Override
-	public ReturnsDTO getCoinReturns()  throws CryptoTrackerException{
+	public ReturnsDTO getCoinReturns(String symbol, double currentPrice)  throws CryptoTrackerException{
 		// TODO Auto-generated method stub
-		return null;
+		Coin coin = coinRepository.findBySymbol(symbol);
+		if(coin == null) {
+			throw new CryptoTrackerException("Service.COIN_DOESNOT_EXIST");
+		}
+		ReturnsDTO returnsDTO = new ReturnsDTO();
+		returnsDTO.setCoinName(coin.getName());
+		returnsDTO.setSymbol(symbol);
+		returnsDTO.setCostPrice(coin.getCostPrice());
+		returnsDTO.setCurrentPrice(currentPrice);
+		returnsDTO.setReturnPercentage((float)((currentPrice - coin.getCostPrice())/coin.getCostPrice() )*100);
+		returnsDTO.setReturnValue((currentPrice - coin.getCostPrice() )*coin.getQuantity());
+		return returnsDTO;
 	}
 
 	@Override
@@ -53,13 +64,25 @@ public class CoinServiceImpl implements CoinService{
 	@Override
 	public void updateCoin(CoinDTO coinDTO) throws CryptoTrackerException {
 		// TODO Auto-generated method stub
+		Coin coin = coinRepository.findBySymbol(coinDTO.getSymbol());
+		if(coin == null) {
+			throw new CryptoTrackerException("Service.COIN_DOESNOT_EXIST");
+		}
+		coin.setCostPrice(coinDTO.getCostPrice());
+		coin.setQuantity(coinDTO.getQuantity());
+		coin.setValue(coinDTO.getValue());
+		coinRepository.save(coin);
 		
 	}
 
 	@Override
 	public void deleteCoin(String symbol)  throws CryptoTrackerException{
 		// TODO Auto-generated method stub
-		
+		Coin temp = coinRepository.findBySymbol(symbol);
+		if(temp == null) {
+			throw new CryptoTrackerException("Service.COIN_DOESNOT_EXIST");
+		}
+		coinRepository.deleteBySymbol(symbol);
 	}
 
 }
