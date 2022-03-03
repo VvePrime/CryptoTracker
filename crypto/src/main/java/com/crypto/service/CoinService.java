@@ -8,9 +8,10 @@ import com.crypto.exception.CryptoTrackerException;
 
 public interface CoinService {
 
-	public List<CoinDTO> getAllCoins() throws CryptoTrackerException;
+	public List<CoinDTO> getAll();
+	public List<CoinDTO> getWalletCoins(Integer walletId) throws CryptoTrackerException;
 	public ReturnsDTO getCoinReturns(String symbol, double currentPrice) throws CryptoTrackerException;
-	public void addCoin(CoinDTO coinDTO) throws CryptoTrackerException;
+	public void addCoinToWallet(CoinDTO coinDTO,Integer walletId) throws CryptoTrackerException;
 	public void updateCoin(CoinDTO coinDTO) throws CryptoTrackerException;
-	public void deleteCoin(String symbol) throws CryptoTrackerException;
+	public void deleteCoin(String symbol, Integer walletId) throws CryptoTrackerException;
 }

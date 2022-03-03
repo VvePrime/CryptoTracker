@@ -28,9 +28,9 @@ public class CoinsController {
 	@Autowired
 	private CoinService coinService;
 	
-	@GetMapping(value="/coins")
-	public ResponseEntity<List<CoinDTO>> getAllCoins() throws CryptoTrackerException{
-		List<CoinDTO> coinDTOList = coinService.getAllCoins();
+	@GetMapping(value="/{wallet}/coins")
+	public ResponseEntity<List<CoinDTO>> getWalletCoins(@PathVariable Integer wallet) throws CryptoTrackerException{
+		List<CoinDTO> coinDTOList = coinService.getWalletCoins(wallet);
 		return new ResponseEntity<>(coinDTOList,HttpStatus.OK);
 	}
 	
@@ -40,9 +40,9 @@ public class CoinsController {
 		return new ResponseEntity<>(returnsDTO,HttpStatus.OK);
 	}
 	
-	@PostMapping(value="/addCoin")
-	public ResponseEntity<String> addCoin(@Valid @RequestBody CoinDTO coin) throws CryptoTrackerException{
-		coinService.addCoin(coin);		
+	@PostMapping(value="/{walletId}/addCoin")
+	public ResponseEntity<String> addCoinToWallet(@Valid @RequestBody CoinDTO coin,@PathVariable Integer walletId) throws CryptoTrackerException{
+		coinService.addCoinToWallet(coin,walletId);		
 		return new ResponseEntity<>("Coin Added.",HttpStatus.CREATED);
 	}
 	
@@ -52,9 +52,9 @@ public class CoinsController {
 		return new ResponseEntity<>("Coin Updated.",HttpStatus.OK);
 	}
 	
-	@DeleteMapping(value="/deleteCoin/{symbol}")
-	public ResponseEntity<String> deleteCoin(@PathVariable String symbol) throws CryptoTrackerException{
-		coinService.deleteCoin(symbol);
+	@DeleteMapping(value="{walletId}/deleteCoin/{symbol}")
+	public ResponseEntity<String> deleteCoin(@PathVariable String symbol,@PathVariable Integer walletId) throws CryptoTrackerException{
+		coinService.deleteCoin(symbol,walletId);
 		return new ResponseEntity<>(symbol+" deleted",HttpStatus.OK);
 	}
 	
