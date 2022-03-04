@@ -37,7 +37,27 @@ public class CoinServiceImpl implements CoinService{
 	}
 	
 	@Override
-	public List<CoinDTO> getWalletCoins(Integer walletId)  throws CryptoTrackerException{
+	public CoinDTO getWalletCoin(Integer walletId, String symbol) throws CryptoTrackerException {
+		List<Coin> coins= coinRepository.findByWalletWalletId(walletId);
+		boolean present = false;
+		CoinDTO coinDTO=null;
+		if(!coins.isEmpty()) {
+			for(Coin coin: coins) {
+				if(coin.getSymbol().equals(symbol) ) {
+					present = true;
+					coinDTO=CoinDTO.valueOf(coin);
+				}						
+			}
+			
+		}
+		if(!present) {
+			throw new CryptoTrackerException("Service.COIN_DOESNOT_EXIST");
+		}
+		return coinDTO;
+	}
+	
+	@Override
+	public List<CoinDTO> getWalletCoinList(Integer walletId)  throws CryptoTrackerException{
 		// TODO Auto-generated method stub
 		Iterable<Coin> coins= coinRepository.findByWalletWalletId(walletId);
 		List<CoinDTO> coinDTOList = new ArrayList<>();
@@ -86,10 +106,21 @@ public class CoinServiceImpl implements CoinService{
 	}
 
 	@Override
-	public void updateCoin(CoinDTO coinDTO) throws CryptoTrackerException {
+	public void updateCoin(CoinDTO coinDTO,Integer walletId) throws CryptoTrackerException {
 		// TODO Auto-generated method stub
-		Coin coin = coinRepository.findBySymbol(coinDTO.getSymbol());
-		if(coin == null) {
+		List<Coin> coins= coinRepository.findByWalletWalletId(walletId);
+		boolean present = false;
+		Coin coin = null;
+		if(!coins.isEmpty()) {
+			for(Coin coinItr: coins) {
+				if(coinItr.getSymbol().equals(coinDTO.getSymbol()) ) {
+					present = true;
+					coin=coinItr;
+				}						
+			}
+			
+		}
+		if(!present) {
 			throw new CryptoTrackerException("Service.COIN_DOESNOT_EXIST");
 		}
 		coin.setCostPrice(coinDTO.getCostPrice());
@@ -119,8 +150,7 @@ public class CoinServiceImpl implements CoinService{
 		}
 		coinRepository.deleteById(coinId);
 	}
-	
 
-	
+		
 
 }

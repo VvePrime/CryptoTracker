@@ -1,4 +1,4 @@
-package com.crypto.utility;
+package com.wallet.utility;
 
 import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Aspect;
@@ -11,7 +11,7 @@ import org.apache.commons.logging.LogFactory;
 public class LoggingAspect {
 	public static final Log LOGGER = LogFactory.getLog(LoggingAspect.class);
 
-	@AfterThrowing(pointcut = "execution(* com.crypto.service.*Impl.*(..))", throwing = "exception")
+	@AfterThrowing(pointcut = "execution(* com.wallet.service.*Impl.*(..))", throwing = "exception")
 	public void logServiceException(Exception exception) throws Exception {
 		LOGGER.error(exception.getMessage(), exception);
 	}
