@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.client.RestClientException;
 
 import com.wallet.exception.CryptoTrackerException;
 
@@ -44,5 +45,15 @@ public class ExceptionControllerAdvice {
 		errorInfo.setErrorMessage(errorMsg);
 		errorInfo.setTimestamp(LocalDateTime.now());
 		return new ResponseEntity<>(errorInfo, HttpStatus.BAD_REQUEST);
+	}
+	@ExceptionHandler(RestClientException.class)
+	public ResponseEntity<ErrorInfo> exceptionHandler(RestClientException exception) {
+		ErrorInfo errorInfo = new ErrorInfo();
+		errorInfo.setErrorCode(HttpStatus.NOT_FOUND.value());
+		String errorMsg = exception.getMessage();
+		
+		errorInfo.setErrorMessage(errorMsg);
+		errorInfo.setTimestamp(LocalDateTime.now());
+		return new ResponseEntity<>(errorInfo, HttpStatus.NOT_FOUND);
 	}
 }
