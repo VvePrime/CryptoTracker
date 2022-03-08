@@ -8,19 +8,15 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import com.wallet.dto.CoinDTO;
-import com.wallet.dto.CoinDTOList;
 import com.wallet.dto.WalletDTO;
-import com.wallet.entity.Coin;
 import com.wallet.entity.Wallet;
 import com.wallet.exception.CryptoTrackerException;
 import com.wallet.repository.WalletRepository;
-import com.wallet.utility.ErrorInfo;
 
 @Service
 @Transactional
@@ -36,6 +32,7 @@ public class WalletServiceImpl implements WalletService{
 		return walletId;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<CoinDTO> getWalletCoins(Integer walletId)  throws CryptoTrackerException {
 		// TODO Auto-generated method stub
@@ -49,16 +46,11 @@ public class WalletServiceImpl implements WalletService{
 		//ResponseEntity<?> response = restTemplate.getForObject(url, ResponseEntity.class, walletId);
 		//ResponseEntity<?> response = restTemplate.getForEntity(url,ResponseEntity.class,walletId);
 		ResponseEntity<List<CoinDTO>> response = restTemplate.exchange(url,HttpMethod.GET,	null,new ParameterizedTypeReference<List<CoinDTO>>(){},walletId);
-		if(response.getStatusCode()==HttpStatus.OK) {
+		
 			Object responseObj = response.getBody();
 			if(responseObj != null)
 				coins = (List<CoinDTO>)responseObj;
-		}
-		else{
-			Object resposneObj =response.getBody();
-			ErrorInfo error = (ErrorInfo)resposneObj;
-			throw new CryptoTrackerException(error.getErrorMessage());
-		}
+		
 		
 		return coins;
 	}

@@ -2,8 +2,6 @@ package com.wallet.dto;
 
 import javax.validation.constraints.NotNull;
 
-import com.wallet.entity.Coin;
-import com.wallet.entity.Wallet;
 
 public class CoinDTO {
 
@@ -18,8 +16,14 @@ public class CoinDTO {
 	private double costPrice;
 	@NotNull(message="Service.VALUE_NULL")
 	private double value;
-	private WalletDTO walletDTO;
+	private Integer walletId;
 	
+	public Integer getWalletId() {
+		return walletId;
+	}
+	public void setWalletId(Integer walletId) {
+		this.walletId = walletId;
+	}
 	public String getName() {
 		return name;
 	}
@@ -56,43 +60,6 @@ public class CoinDTO {
 	public void setHoldingId(Integer holdingId) {
 		this.holdingId = holdingId;
 	}
-	public WalletDTO getWalletDTO() {
-		return walletDTO;
-	}
-	public void setWalletDTO(WalletDTO walletDTO) {
-		this.walletDTO = walletDTO;
-	}
 	
-	public Coin createEntity(CoinDTO coinDTO) {
-		Coin coin = new Coin();
-		coin.setHoldingId(coinDTO.getHoldingId());
-		coin.setCostPrice(coinDTO.getCostPrice());
-		coin.setName(coinDTO.getName());
-		coin.setQuantity(coinDTO.getQuantity());
-		coin.setSymbol(coinDTO.getSymbol());
-		coin.setValue(coinDTO.getValue());
-		if(coinDTO.getWalletDTO()!=null) {
-			Wallet wallet = new Wallet();
-			wallet.setHolder(coinDTO.getWalletDTO().getHolder());
-			wallet.setWalletId(coinDTO.getWalletDTO().getWalletId());
-			coin.setWallet(wallet);
-		}
-		
-		return coin;
-	}
-	
-	public static CoinDTO valueOf(Coin coin) {
-		CoinDTO coinDTO =new CoinDTO();
-		coinDTO.setCostPrice(coin.getCostPrice());
-		coinDTO.setName(coin.getName());
-		coinDTO.setQuantity(coin.getQuantity());
-		coinDTO.setSymbol(coin.getSymbol());
-		coinDTO.setValue(coin.getValue());
-		coinDTO.setHoldingId(coin.getHoldingId());
-		WalletDTO walletDTO = new WalletDTO();
-		walletDTO.setHolder(coin.getWallet().getHolder());
-		walletDTO.setWalletId(coin.getWallet().getWalletId());
-		return coinDTO;
-	}
 
 }
