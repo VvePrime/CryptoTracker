@@ -3,7 +3,6 @@ package com.crypto.dto;
 import javax.validation.constraints.NotNull;
 
 import com.crypto.entity.Coin;
-import com.crypto.entity.Wallet;
 
 public class CoinDTO {
 
@@ -18,8 +17,15 @@ public class CoinDTO {
 	private double costPrice;
 	@NotNull(message="Service.VALUE_NULL")
 	private double value;
-	private WalletDTO walletDTO;
+	@NotNull
+	private Integer walletId;
 	
+	public Integer getWalletId() {
+		return walletId;
+	}
+	public void setWalletId(Integer walletId) {
+		this.walletId = walletId;
+	}
 	public String getName() {
 		return name;
 	}
@@ -56,12 +62,7 @@ public class CoinDTO {
 	public void setHoldingId(Integer holdingId) {
 		this.holdingId = holdingId;
 	}
-	public WalletDTO getWalletDTO() {
-		return walletDTO;
-	}
-	public void setWalletDTO(WalletDTO walletDTO) {
-		this.walletDTO = walletDTO;
-	}
+
 	
 	public Coin createEntity(CoinDTO coinDTO) {
 		Coin coin = new Coin();
@@ -71,12 +72,7 @@ public class CoinDTO {
 		coin.setQuantity(coinDTO.getQuantity());
 		coin.setSymbol(coinDTO.getSymbol());
 		coin.setValue(coinDTO.getValue());
-		if(coinDTO.getWalletDTO()!=null) {
-			Wallet wallet = new Wallet();
-			wallet.setHolder(coinDTO.getWalletDTO().getHolder());
-			wallet.setWalletId(coinDTO.getWalletDTO().getWalletId());
-			coin.setWallet(wallet);
-		}
+		coin.setWalletId(coinDTO.getWalletId());
 		
 		return coin;
 	}
@@ -89,9 +85,7 @@ public class CoinDTO {
 		coinDTO.setSymbol(coin.getSymbol());
 		coinDTO.setValue(coin.getValue());
 		coinDTO.setHoldingId(coin.getHoldingId());
-		WalletDTO walletDTO = new WalletDTO();
-		walletDTO.setHolder(coin.getWallet().getHolder());
-		walletDTO.setWalletId(coin.getWallet().getWalletId());
+		coinDTO.setWalletId(coin.getWalletId());
 		return coinDTO;
 	}
 

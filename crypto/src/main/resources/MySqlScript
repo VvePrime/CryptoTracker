@@ -1,6 +1,6 @@
-drop database if exists crypto_db;
-create database crypto_db;
-use  crypto_db;
+drop database if exists coin_db;
+create database coin_db;
+use  coin_db;
 
 create table wallet(
 	wallet_id int not null auto_increment,
@@ -8,19 +8,25 @@ create table wallet(
 	constraint pk_wallet primary key (wallet_id)
 );
 
+insert into wallet values(1001,'Satoshi Nakamoto');
+insert into wallet values(1002,'Vitalik');
+
+drop database if exists wallet_db;
+create database wallet_db;
+use  wallet_db;
+
 create table coin(
 	holding_id int not null auto_increment,
-	wlt_id int,
+	wallet_id int,
    name varchar(50),
    symbol varchar(20),
    quantity double precision,
    cost_price double precision,
    value double precision,
    constraint pk_coin primary key (holding_id),
-   constraint fk_wallet_coin foreign key (wlt_id) references wallet(wallet_id)
 );
 
-insert into wallet values(1001,'Satoshi Nakamoto');
 insert into coin values (1,1001,'Bitcoin','BTC', 1.00, 40000, 40000);
+insert into coin values (2,1002,'Ethereum','ETH', 10.00, 30000, 30000);
 
 select * from coin;

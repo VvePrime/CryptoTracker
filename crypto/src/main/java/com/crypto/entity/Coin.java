@@ -1,14 +1,10 @@
 package com.crypto.entity;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 
-import com.crypto.dto.WalletDTO;
 
 @Entity
 public class Coin {
@@ -20,11 +16,15 @@ public class Coin {
 	private String symbol;
 	private double quantity;
 	private double costPrice;
-	private double value;
-	@ManyToOne(cascade=CascadeType.ALL)
-	@JoinColumn(name="wlt_id")
-	private Wallet wallet;
+	private double value;	
+	private Integer walletId;
 	
+	public Integer getWalletId() {
+		return walletId;
+	}
+	public void setWalletId(Integer walletId) {
+		this.walletId = walletId;
+	}
 	public String getName() {
 		return name;
 	}
@@ -60,12 +60,6 @@ public class Coin {
 	}
 	public void setHoldingId(Integer holding_id) {
 		this.holdingId = holding_id;
-	}
-	public Wallet getWallet() {
-		return wallet;
-	}
-	public void setWallet(Wallet wallet) {
-		this.wallet = wallet;
 	}
 	
 }

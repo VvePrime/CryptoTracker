@@ -2,7 +2,6 @@ package com.crypto.service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import javax.transaction.Transactional;
 
@@ -12,17 +11,13 @@ import org.springframework.stereotype.Service;
 import com.crypto.dto.CoinDTO;
 import com.crypto.dto.ReturnsDTO;
 import com.crypto.entity.Coin;
-import com.crypto.entity.Wallet;
 import com.crypto.exception.CryptoTrackerException;
 import com.crypto.repository.CoinRepository;
-import com.crypto.repository.WalletRepository;
 
 @Service
 @Transactional
 public class CoinServiceImpl implements CoinService{
 	
-	@Autowired
-	private WalletRepository walletRepository;
 	@Autowired
 	private CoinRepository coinRepository;
 
@@ -38,7 +33,7 @@ public class CoinServiceImpl implements CoinService{
 	
 	@Override
 	public CoinDTO getWalletCoin(Integer walletId, String symbol) throws CryptoTrackerException {
-		List<Coin> coins= coinRepository.findByWalletWalletId(walletId);
+		List<Coin> coins= coinRepository.findByWalletId(walletId);
 		boolean present = false;
 		CoinDTO coinDTO=null;
 		if(!coins.isEmpty()) {
@@ -59,14 +54,15 @@ public class CoinServiceImpl implements CoinService{
 	@Override
 	public List<CoinDTO> getWalletCoinList(Integer walletId)  throws CryptoTrackerException{
 		// TODO Auto-generated method stub
-		Iterable<Coin> coins= coinRepository.findByWalletWalletId(walletId);
+		Iterable<Coin> coins= coinRepository.findByWalletId(walletId);
 		List<CoinDTO> coinDTOList = new ArrayList<>();
 		for (Coin coin:coins) {
 			coinDTOList.add(CoinDTO.valueOf(coin));
 		}
 		return coinDTOList;
 	}
-
+	
+	//To be changed
 	@Override
 	public ReturnsDTO getCoinReturns(String symbol, double currentPrice)  throws CryptoTrackerException{
 		// TODO Auto-generated method stub
@@ -87,11 +83,8 @@ public class CoinServiceImpl implements CoinService{
 	@Override
 	public void addCoinToWallet(CoinDTO coinDTO,Integer walletId)  throws CryptoTrackerException{
 		// TODO Auto-generated method stub
-		Optional<Wallet> optionalWallet = walletRepository.findById(walletId);
-		if(!optionalWallet.isPresent()) {
-			throw new CryptoTrackerException("Service.Wallet_DOESNOT_EXIST");
-		}
-		List<Coin> coins= coinRepository.findByWalletWalletId(walletId);
+		
+		List<Coin> coins= coinRepository.findByWalletId(walletId);
 		if(!coins.isEmpty()) {
 			for(Coin coin: coins) {
 				if(coin.getSymbol().equals(coinDTO.getSymbol()))
@@ -99,8 +92,7 @@ public class CoinServiceImpl implements CoinService{
 			}
 			
 		}
-		Coin coin = coinDTO.createEntity(coinDTO);
-		coin.setWallet(optionalWallet.get());
+		Coin coin = coinDTO.createEntity(coinDTO);		
 		coinRepository.save(coin);
 		
 	}
@@ -108,7 +100,7 @@ public class CoinServiceImpl implements CoinService{
 	@Override
 	public void updateCoin(CoinDTO coinDTO,Integer walletId) throws CryptoTrackerException {
 		// TODO Auto-generated method stub
-		List<Coin> coins= coinRepository.findByWalletWalletId(walletId);
+		List<Coin> coins= coinRepository.findByWalletId(walletId);
 		boolean present = false;
 		Coin coin = null;
 		if(!coins.isEmpty()) {
@@ -133,7 +125,7 @@ public class CoinServiceImpl implements CoinService{
 	@Override
 	public void deleteCoin(String symbol, Integer walletId)  throws CryptoTrackerException{
 		// TODO Auto-generated method stub
-		List<Coin> coins= coinRepository.findByWalletWalletId(walletId);
+		List<Coin> coins= coinRepository.findByWalletId(walletId);
 		boolean present = false;
 		Integer coinId=0;
 		if(!coins.isEmpty()) {

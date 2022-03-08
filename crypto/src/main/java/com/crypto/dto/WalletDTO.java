@@ -1,6 +1,5 @@
 package com.crypto.dto;
 
-import com.crypto.entity.Wallet;
 
 public class WalletDTO {
 	
@@ -20,17 +19,6 @@ public class WalletDTO {
 		this.holder = holder;
 	}
 	
-	public Wallet createEntity() {
-		Wallet wallet = new Wallet();
-		wallet.setHolder(getHolder());
-		return wallet;
-	}
 	
-	public static WalletDTO valueOf(Wallet wallet) {
-		WalletDTO walletDTO = new WalletDTO();
-		walletDTO.setHolder(wallet.getHolder());
-		walletDTO.setWalletId(walletDTO.getWalletId());
-		return walletDTO;
-	}
 	
 }
