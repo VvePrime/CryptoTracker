@@ -7,6 +7,7 @@ import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,8 @@ public class WalletServiceImpl implements WalletService{
 
 	@Autowired
 	WalletRepository walletRepo;
+	@Autowired
+	Environment environment;
 	@Override
 	public Integer createWallet(WalletDTO walletDTO)  throws CryptoTrackerException{
 		Wallet wallet = walletDTO.createEntity();
@@ -41,7 +44,7 @@ public class WalletServiceImpl implements WalletService{
 		if(!optionalWallet.isPresent()) {
 			throw new CryptoTrackerException("Service.WALLET_DOESNOT_EXIST");
 		}
-		String url = "http://localhost:8765/crypto/{walletId}/coins";
+		String url = environment.getProperty("CoinUri")+"/{walletId}/coins";
 		RestTemplate restTemplate = new RestTemplate();
 		//ResponseEntity<?> response = restTemplate.getForObject(url, ResponseEntity.class, walletId);
 		//ResponseEntity<?> response = restTemplate.getForEntity(url,ResponseEntity.class,walletId);
@@ -61,7 +64,7 @@ public class WalletServiceImpl implements WalletService{
 			throw new CryptoTrackerException("Service.WALLET_DOESNOT_EXIST");
 		}
 		CoinDTO coinDTO = null;
-		String url = "http://localhost:8765/crypto/{walletId}/coin/{symbol}";
+		String url = environment.getProperty("CoinUri")+"/{walletId}/coin/{symbol}";
 		RestTemplate restTemplate = new RestTemplate();		
 		coinDTO = restTemplate.getForObject(url, CoinDTO.class, walletId, symbol);
 		return coinDTO;
@@ -83,7 +86,7 @@ public class WalletServiceImpl implements WalletService{
 		if(!optionalWallet.isPresent()) {
 			throw new CryptoTrackerException("Service.WALLET_DOESNOT_EXIST");
 		}
-		String url = "http://localhost:8765/crypto/{walletId}/addCoin";
+		String url = environment.getProperty("CoinUri")+"/{walletId}/addCoin";
 		RestTemplate restTemplate = new RestTemplate();
 		String response = restTemplate.postForObject(url, coinDTO, String.class, walletId);		
 		return response;
@@ -95,7 +98,7 @@ public class WalletServiceImpl implements WalletService{
 		if(!optionalWallet.isPresent()) {
 			throw new CryptoTrackerException("Service.WALLET_DOESNOT_EXIST");
 		}
-		String url = "http://localhost:8765/crypto/{walletId}/deleteCoin/{symbol}";
+		String url = environment.getProperty("CoinUri")+"/{walletId}/deleteCoin/{symbol}";
 		RestTemplate restTemplate = new RestTemplate();
 		restTemplate.delete(url, walletId, symbol);
 		
@@ -108,7 +111,7 @@ public class WalletServiceImpl implements WalletService{
 		if(!optionalWallet.isPresent()) {
 			throw new CryptoTrackerException("Service.WALLET_DOESNOT_EXIST");
 		}
-		String url = "http://localhost:8765/crypto/{walletId}/updateInvestment";
+		String url = environment.getProperty("CoinUri")+"/{walletId}/updateInvestment";
 		RestTemplate restTemplate = new RestTemplate();
 		restTemplate.put(url,coinDTO, walletId);
 		
